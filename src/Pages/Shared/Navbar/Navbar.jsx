@@ -1,23 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import Logo from "../../../Components/Logo/Logo";
 
 const Navbar = () => {
-
-    let links = <>
-        <NavLink className={"hover:text-primary transition"}>Home</NavLink>
-        <NavLink className={"hover:text-primary transition"}>All Issues</NavLink>
-        <NavLink className={"hover:text-primary transition"}>About</NavLink>
-        <NavLink className={"hover:text-primary transition"}>Contact</NavLink>
-    </>
-
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
-    const isLoggedIn = true; // you can replace with auth state
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    let links = <>
+        <NavLink className={"hover:text-[#FFF1AD] transition"}>Home</NavLink>
+        <NavLink className={"hover:text-[#FFF1AD] transition"}>All Issues</NavLink>
+        <NavLink className={"hover:text-[#FFF1AD] transition"}>About</NavLink>
+        <NavLink className={"hover:text-[#FFF1AD] transition"}>Contact</NavLink>
+    </>
 
     return (
-        <nav className="absolute top-0 left-0 w-full z-50">
+        <nav
+            className={`
+                fixed top-0 left-0 w-full z-50 transition-all duration-300
+                ${scrolled ? "backdrop-blur-xl bg-black/30 shadow-lg" : "bg-transparent"}`}>
             <div className="max-w-[1400px] mx-auto">
                 <div className="flex items-center justify-between py-5 border-b border-white/30">
 
@@ -36,8 +45,9 @@ const Navbar = () => {
                         <button onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
                             <img
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AX..."
-                                className="h-9 w-9 rounded-full border object-cover"/>
+                                className="h-9 w-9 rounded-full border object-cover" />
                         </button>
+
                         {profileDropdownOpen && (
                             <div className="absolute right-0 mt-3 w-48 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg z-50">
                                 <div className="px-4 py-3 border-b border-gray-200">
@@ -51,8 +61,7 @@ const Navbar = () => {
                                     Dashboard
                                 </NavLink>
 
-                                <button
-                                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100">
+                                <button className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100">
                                     Logout
                                 </button>
                             </div>
@@ -71,7 +80,7 @@ const Navbar = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-                <div className="lg:hidden w-full bg-white shadow-xl px-6 py-4">
+                <div className="lg:hidden w-full bg-transparent text-white shadow-xl px-6 py-4">
                     <div className="flex flex-col space-y-4">
                         {links}
                     </div>

@@ -41,10 +41,9 @@ export default function Banner() {
     ];
 
     return (
-        <div className="w-screen h-[80vh] overflow-hidden relative left-1/2 right-1/2 -mx-[50vw]">
+        <div className="fixed top-0 left-0 w-full h-[80vh] overflow-hidden z-0">
             <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                navigation
+                modules={[ Pagination, Autoplay]}
                 pagination={{ clickable: true }}
                 autoplay={{ delay: 3000 }}
                 loop={true}
@@ -55,11 +54,11 @@ export default function Banner() {
                         <div className="w-full h-full bg-cover bg-center flex flex-col justify-center px-10 md:px-20 absolute inset-0"
                             style={{ backgroundImage: `url(${item.image})` }}>
                                 <div className="absolute inset-0 bg-black/40"></div>
-                            <div className="w-[1400px] mx-auto text-[#FFF1AD]">
-                                <h1 className="text-4xl md:text-6xl font-bold drop-shadow-lg">
+                            <div className="w-[1400px] mx-auto">
+                                <h1 className="text-4xl md:text-6xl font-bold text-[#FFF1AD] drop-shadow-lg">
                                     {item.title}
                                 </h1>
-                                <p className="text-lg md:text-2xl mt-4 drop-shadow">
+                                <p className="text-lg text-white md:text-2xl mt-4 drop-shadow">
                                     {item.subtitle}
                                 </p>
                             </div>
