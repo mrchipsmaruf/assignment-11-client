@@ -5,8 +5,8 @@ import { RiVerifiedBadgeFill } from "react-icons/ri";
 
 const Feature = () => {
   return (
-    <section className="mt-[80vh] bg-[#F5F5F5] py-24 rounded-4xl bg-background-light dark:bg-background-dark relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="mt-[80vh] bg-[#F5F5F5] py-24 rounded-t-4xl bg-background-light dark:bg-background-dark relative">
+      <div className="max-w-[1400px] mx-auto">
 
         {/* Header */}
         <div className="text-center mb-16">
@@ -53,7 +53,7 @@ const Feature = () => {
               <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 "></div>
 
               <div className="relative z-10 ">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl text-[#FFF1AD] mb-6 transition-colors duration-300">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl text-yellow-400 mb-6 transition-colors duration-300">
                   <span className="material-icons-outlined text-3xl">{item.icon}</span>
                 </div>
 
@@ -76,7 +76,7 @@ const Feature = () => {
             {/* Left content */}
             <div className="p-10 md:p-16 flex flex-col justify-center">
               <div className="flex items-center space-x-2 mb-6">
-                <span className="font-medium tracking-wide text-[#FFF1AD] text-sm uppercase">
+                <span className="font-medium tracking-wide text-yellow-400 text-sm uppercase">
                   Smart Mapping Technology
                 </span>
               </div>
@@ -97,7 +97,7 @@ const Feature = () => {
                   "Historical data analysis for better future planning",
                 ].map((text, i) => (
                   <li key={i} className="flex items-start">
-                    <span className="material-icons-outlined text-[#FFF1AD] mr-3 mt-1"><FaCheckCircle /></span>
+                    <span className="material-icons-outlined text-yellow-400 mr-3 mt-1"><FaCheckCircle /></span>
                     <span className="text-gray-700 dark:text-gray-300">{text}</span>
                   </li>
                 ))}
@@ -105,7 +105,7 @@ const Feature = () => {
 
               <a
                 href="#"
-                className="inline-flex items-center text-[#FFF1AD] font-semibold hover:text-gray-900 transition-colors group">
+                className="inline-flex items-center text-yellow-400 font-semibold hover:text-gray-900 transition-colors group">
                 Learn more about our technology
                 <span className="material-icons-outlined ml-2 transform group-hover:translate-x-1 transition-transform">
                   <FaArrowRight />

@@ -55,7 +55,7 @@ export default function Banner() {
                             style={{ backgroundImage: `url(${item.image})` }}>
                                 <div className="absolute inset-0 bg-black/40"></div>
                             <div className="w-[1400px] mx-auto">
-                                <h1 className="text-4xl md:text-6xl font-bold text-[#FFF1AD] drop-shadow-lg">
+                                <h1 className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">
                                     {item.title}
                                 </h1>
                                 <p className="text-lg text-white md:text-2xl mt-4 drop-shadow">

@@ -16,10 +16,10 @@ const Navbar = () => {
     }, []);
 
     let links = <>
-        <NavLink className={"hover:text-[#FFF1AD] transition"}>Home</NavLink>
-        <NavLink className={"hover:text-[#FFF1AD] transition"}>All Issues</NavLink>
-        <NavLink className={"hover:text-[#FFF1AD] transition"}>About</NavLink>
-        <NavLink className={"hover:text-[#FFF1AD] transition"}>Contact</NavLink>
+        <NavLink className={"hover:text-yellow-400 transition"}>Home</NavLink>
+        <NavLink className={"hover:text-yellow-400 transition"}>All Issues</NavLink>
+        <NavLink className={"hover:text-yellow-400 transition"}>About</NavLink>
+        <NavLink className={"hover:text-yellow-400 transition"}>Contact</NavLink>
     </>
 
     return (
@@ -31,7 +31,7 @@ const Navbar = () => {
                 <div className="flex items-center justify-between py-5 border-b border-white/30">
 
                     {/* Logo */}
-                    <div className="text-[#FFF1AD]">
+                    <div className="text-yellow-400">
                         <Logo />
                     </div>
 
