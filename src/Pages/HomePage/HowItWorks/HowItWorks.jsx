@@ -2,8 +2,8 @@ import React from "react";
 
 const HowItWorks = () => {
     return (
-        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#EBEBEB] dark:bg-[#0D0D0D] relative overflow-hidden">
-            <div className="border-b max-w-[1400px] mx-auto">
+        <section className="py-15 px-4 sm:px-6 lg:px-8 bg-[#EBEBEB] dark:bg-[#0D0D0D] relative overflow-hidden">
+            <div className="border-b pb-25 max-w-[1400px] mx-auto">
                 <div className="relative">
                     {/* Header */}
                     <div className="text-center mb-20">
