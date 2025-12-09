@@ -16,19 +16,22 @@ const Navbar = () => {
     }, []);
 
     let links = <>
-        <NavLink to={"/"} className={`${scrolled ? "text-white" : "text-black"} hover:text-yellow-400 transition`}>Home</NavLink>
-        <NavLink to={"all-issues"} className={`${scrolled ? "text-white" : "text-black"} hover:text-yellow-400 transition`}>All Issues</NavLink>
-        <NavLink to={"about"} className={`${scrolled ? "text-white" : "text-black"} hover:text-yellow-400 transition`}>Our Story</NavLink>
-        <NavLink to={"contact"} className={`${scrolled ? "text-white" : "text-black"} hover:text-yellow-400 transition`}>Contact</NavLink>
+        <NavLink to={"/"} className={`${scrolled ? "text-black" : "text-white"} hover:text-yellow-400 transition`}>Home</NavLink>
+        <NavLink to={"all-issues"} className={`${scrolled ? "text-black " : "text-white "} hover:text-yellow-400 transition`}>All Issues</NavLink>
+        <NavLink to={"about"} className={`${scrolled ? "text-black " : "text-white "} hover:text-yellow-400 transition`}>Our Story</NavLink>
+        <NavLink to={"contact"} className={`${scrolled ? "text-black " : "text-white"} hover:text-yellow-400 transition`}>Contact</NavLink>
     </>
 
     return (
         <nav
             className={`
                 fixed top-0 left-0 w-full z-50 transition-all duration-300
-                ${scrolled ? "backdrop-blur-xl bg-black/30 shadow-lg" : "bg-transparent"}`}>
+                ${scrolled
+                    ? "bg-white/40 backdrop-blur-xl border-black"
+                    : "bg-transparent border-white"}`}>
             <div className="max-w-[1400px] mx-auto">
-                <div className="flex items-center justify-between py-5 border-b border-black/30">
+                <div className={`flex items-center justify-between py-5 border-b ${scrolled ? "border-black/30" : "border-white/30"}`}>
+
 
                     {/* Logo */}
                     <div className="text-yellow-400">
@@ -80,7 +83,7 @@ const Navbar = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-                <div className="lg:hidden w-full bg-transparent text-white shadow-xl px-6 py-4">
+                <div className={`lg:hidden w-full shadow-xl px-6 py-4 ${scrolled ? "bg-white text-black" : "bg-black/40 text-white"}`}>
                     <div className="flex flex-col space-y-4">
                         {links}
                     </div>

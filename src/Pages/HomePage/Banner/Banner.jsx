@@ -1,5 +1,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 import banner1 from "../../../assets/banner1.jpg";
 import banner2 from "../../../assets/banner2.jpg";
 import banner3 from "../../../assets/banner3.jpg";
@@ -41,7 +44,7 @@ export default function Banner() {
     ];
 
     return (
-        <div className="fixed top-0 left-0 w-full h-[80vh] overflow-hidden z-0">
+        <div className="sticky top-0 left-0 w-full h-[83.5vh] -mt-25 overflow-hidden z-0">
             <Swiper
                 modules={[ Pagination, Autoplay]}
                 pagination={{ clickable: true }}

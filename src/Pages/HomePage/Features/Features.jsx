@@ -6,12 +6,12 @@ import { Link } from "react-router";
 
 const Feature = () => {
   return (
-    <section className="mt-[80vh] bg-[#F5F5F5] py-24 rounded-t-4xl bg-background-light dark:bg-background-dark relative">
+    <section className="-mt-10 bg-[#F5F5F5] py-24 rounded-t-4xl bg-background-light dark:bg-background-dark relative">
       <div className="max-w-[1400px] mx-auto">
 
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="inline-block py-1 px-4 rounded-full border border-gray-300 dark:border-gray-600 text-xs font-semibold uppercase bg-white dark:bg-gray-800 text-text-secondary-light dark:text-text-secondary-dark">
+          <span className="inline-block py-1 px-5 rounded-full border border-gray-300 dark:border-gray-600 text-[15px] font-semibold uppercase bg-white dark:bg-gray-800 text-text-secondary-light dark:text-text-secondary-dark">
             Why Choose Novapress
           </span>
 
@@ -19,7 +19,7 @@ const Feature = () => {
             Empowering Citizens, <br className="hidden md:block" /> Streamlining Service.
           </h2>
 
-          <p className="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
+          <p className="mt-4 max-w-3xl text-2xl mx-auto text-gray-600 dark:text-gray-400">
             We bridge the gap between public needs and government action through transparent, data-driven technology.
           </p>
         </div>

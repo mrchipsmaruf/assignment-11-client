@@ -8,11 +8,11 @@ import SafetyTips from '../SafetyTips/SafetyTips';
 const Home = () => {
     return (
         <div>
-            <Banner></Banner>
-            <Feature></Feature>
-            <HowItWorks></HowItWorks>
-            <SafetyTips></SafetyTips>
-            <Testimonials></Testimonials>
+            <Banner />
+            <Feature />
+            <HowItWorks />
+            <SafetyTips />
+            <Testimonials />
         </div>
     );
 };
