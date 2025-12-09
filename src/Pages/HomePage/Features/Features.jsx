@@ -51,7 +51,7 @@ const Feature = () => {
             <div
               key={index}
               className="group relative bg-white dark:bg-surface-dark p-8 rounded-2xl border border-gray-100 dark:border-white/5 shadow-xl shadow-gray-200/50 dark:shadow-none hover:-translate-y-1 transition-all duration-300">
-              <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 "></div>
+              <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 "></div>
 
               <div className="relative z-10 ">
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl text-yellow-400 mb-6 transition-colors duration-300">
@@ -121,7 +121,7 @@ const Feature = () => {
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTFWuydJxS7zPUf_8JrQslEbhIDm5d1gfLN1nHYFXvfYQPH1YXh84KgJRfppprHs81VRhA8mWsehzPrGJXDYYhxTY1zi7KrFmxoOicskVsg0qMT80OBkHJuKo2cItTC4SnWsJsQaPKSm-74g9LC2-DGJJVg6EGIzSVQLNdV_0QtBK-cM2_d0T5IiaTHcCVCsZtgvtcYZBWLNQUvzCpzrLLMYQXOJku19FqEe2_IgQM-C_Q7J5xzcAVDXqRzpef2JYrnKWtXB5fdPFH"
                 alt="Digital map interface"/>
               <div className="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-white dark:from-surface-dark-lighter to-transparent lg:w-32"></div>
+              <div className="absolute inset-0 bg-linear-to-r from-white dark:from-surface-dark-lighter to-transparent lg:w-32"></div>
             </div>
 
           </div>

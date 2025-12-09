@@ -14,7 +14,7 @@ const NotFound = () => {
                     loop
                     muted
                     playsInline/>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black via-black/60 to-black/30"></div>
             </div>
 
             {/* Header */}

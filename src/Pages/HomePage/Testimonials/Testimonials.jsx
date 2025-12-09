@@ -86,7 +86,7 @@ export default function Testimonials() {
                     }}
                     className="overflow-visible">
                     {testimonials.map((t, i) => (
-                        <SwiperSlide key={i} className="!h-auto">
+                        <SwiperSlide key={i} className="h-auto!">
                             <div
                                 className="h-full flex">
                                 <article className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition flex flex-col w-full">

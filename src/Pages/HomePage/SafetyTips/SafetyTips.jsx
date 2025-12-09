@@ -79,7 +79,7 @@ export default function SafetyTips() {
                                         alt={item.title}
                                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent"></div>
 
                                     <div className="absolute bottom-0 left-0 p-8">
                                         <div className="bg-white text-black text-xs font-bold px-3 py-1 rounded-full inline-block mb-3">
