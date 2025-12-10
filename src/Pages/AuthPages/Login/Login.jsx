@@ -1,5 +1,7 @@
 import React from "react";
 import formBgVideo from "../../../assets/formVideo.mp4"
+import { Link } from "react-router";
+import { FaGoogle } from "react-icons/fa";
 
 const Login = () => {
     return (
@@ -41,7 +43,7 @@ const Login = () => {
                             </p>
 
                             <p className="flex items-center gap-5">
-                                New to Novapress? <span className="btn btn-outline">Create an account</span>
+                                New to Novapress? <Link to={"/register"} className="btn btn-outline">Create an account</Link>
                             </p>
                         </div>
 
@@ -98,7 +100,7 @@ const Login = () => {
                                         <div className="flex-1 border-t border-white/40"></div>
                                     </div>
                                     <button className="w-full mb-0 btn text-white/70 btn-outline border-white/30 hover:text-black">
-                                        Continue with Google
+                                        Continue with Google <FaGoogle></FaGoogle>
                                     </button>
                                 </form>
 
