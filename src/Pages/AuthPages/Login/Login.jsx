@@ -11,8 +11,8 @@ const Login = () => {
 
     let { googleSignIn } = UseAuth();
 
-    let handleGoogleSignIn = (data) => {
-        googleSignIn(data.email, data.password)
+    let handleGoogleSignIn = () => {
+        googleSignIn()
             .then(result => {
                 console.log(result.user)
             })

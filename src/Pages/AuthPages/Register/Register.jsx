@@ -11,8 +11,8 @@ const Register = () => {
     let { register, handleSubmit, formState: { errors } } = useForm();
     let { registerUser, googleSignIn } = UseAuth();
 
-    let handleGoogleRegistration = (data) => {
-        googleSignIn(data.email, data.password)
+    let handleGoogleRegistration = () => {
+        googleSignIn()
         .then(result => {
             console.log(result.user)
         })
@@ -167,7 +167,7 @@ const Register = () => {
                                     </div>
 
                                     {/* Submit Button */}
-                                    <button onClick={handleGoogleRegistration}
+                                    <button onClick={handleRegistration}
                                         type="submit"
                                         className="w-full mb-0 btn text-white/70 btn-outline border-white/30 hover:text-black">
                                         Create an account
@@ -177,7 +177,7 @@ const Register = () => {
                                         <span className="text-white/70">or</span>
                                         <div className="flex-1 border-t border-white/40"></div>
                                     </div>
-                                    <button className="w-full mb-0 btn text-white/70 btn-outline border-white/30 hover:text-black">
+                                    <button onClick={handleGoogleRegistration} className="w-full mb-0 btn text-white/70 btn-outline border-white/30 hover:text-black">
                                         Continue with Google <FaGoogle></FaGoogle>
                                     </button>
                                 </form>
