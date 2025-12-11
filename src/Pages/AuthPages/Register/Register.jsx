@@ -1,39 +1,78 @@
 import React from "react";
-import formBgVideo from "../../../assets/formVideo.mp4"
-import { Link } from "react-router";
+import formBgVideo from "../../../assets/formVideo.mp4";
+import { Link, useLocation, useNavigate } from "react-router";
 import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import UseAuth from "../../../Hooks/UseAuth";
-import { Result } from "postcss";
+import axios from "axios";
 
 const Register = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { registerUser, googleSignIn, updateUserProfile } = UseAuth();
 
-    let { register, handleSubmit, formState: { errors } } = useForm();
-    let { registerUser, googleSignIn } = UseAuth();
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    let handleGoogleRegistration = () => {
+    //GOOGLE LOGIN
+    const handleGoogleRegistration = () => {
         googleSignIn()
-        .then(result => {
-            console.log(result.user)
-        })
-        .catch(error => [
-            console.log(error)
-        ])
-    }
-
-    let handleRegistration = (data) => {
-        registerUser(data.email, data.password)
             .then(result => {
-                console.log(result.user)
+                console.log(result.user);
             })
-            .catch(error => {
-                console.log(error)
+            .catch(error => console.log(error));
+    };
+
+    //EMAIL REGISTRATION
+    const handleRegistration = (data) => {
+        const photoImage = data.photo[0];
+
+        registerUser(data.email, data.password)
+            .then(() => {
+                const formData = new FormData();
+                formData.append('image', photoImage);
+
+                const image_API_URL =
+                    `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Image_Host_Key}`;
+
+                axios.post(image_API_URL, formData)
+                    .then(res => {
+                        const photoURL = res.data.data.url;
+
+                        // 2. Update Firebase profile
+                        const userProfile = {
+                            displayName: data.name,
+                            photoURL: photoURL
+                        };
+
+                        updateUserProfile(userProfile)
+                            .then(() => {
+                                // 3. Prepare new user for backend
+                                const newUser = {
+                                    name: data.name,
+                                    email: data.email,
+                                    photo: photoURL,
+                                    role: "citizen",
+                                    isBlocked: false,
+                                    premium: false
+                                };
+
+                                // 4. Save user in backend DB
+                                axios.post("http://localhost:3000/users", newUser)
+                                    .then(() => {
+                                        console.log("User saved to DB");
+                                        navigate(location.state || "/");
+                                    })
+                                    .catch(err => console.log(err));
+                            })
+                            .catch(err => console.log(err));
+                    })
+                    .catch(err => console.log(err));
             })
-    }
+            .catch(err => console.log(err));
+    };
 
     return (
         <div className="relative w-full overflow-hidden">
-
             {/* Background Video */}
             <video
                 src={formBgVideo}
@@ -46,143 +85,135 @@ const Register = () => {
             <div className="fixed inset-0 bg-black/40 z-0" />
 
             <div className="relative z-10 py-25">
-
-                {/* Wrapper */}
                 <div className="w-full max-w-[1400px] mx-auto">
                     <div className="flex md:flex-row flex-col gap-8 justify-between md:gap-16">
 
-                        {/* Left Section */}
+                        {/*LEFT SECTION */}
                         <div className="text-white space-y-6">
-                            <span className="inline-block py-1 px-5 rounded-full border border-gray-300 dark:border-gray-600 text-[15px] font-semibold uppercase bg-white text-black dark:text-text-secondary-dark">
+                            <span className="inline-block py-1 px-5 rounded-full border border-gray-300 text-[15px] font-semibold uppercase bg-white text-black">
                                 Create an account
                             </span>
-                            <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-                                Welcome to
-                            </h1>
-                            <h1 className="logoText text-5xl md:text-8xl font-bold tracking-tight">
-                                NOVAPRESS
-                            </h1>
 
-                            <p className="text-lg text-white dark:text-neutral-300">
+                            <h1 className="text-5xl md:text-6xl font-bold">Welcome to</h1>
+                            <h1 className="logoText text-5xl md:text-8xl font-bold">NOVAPRESS</h1>
+
+                            <p className="text-lg text-white/70">
                                 Register now to be a part of smarter civic management.
                             </p>
 
                             <p className="flex items-center gap-5">
-                                Already have an account? <Link to={"/login"} className="btn btn-outline">Login</Link>
+                                Already have an account?
+                                <Link state={location.state} to={"/login"} className="btn btn-outline">
+                                    Login
+                                </Link>
                             </p>
                         </div>
 
-                        {/* Login Form */}
-                        <div className="dark:bg-black/20 backdrop-blur-lg p-8 md:p-12 rounded-lg shadow-2xl md:w-[650px] w-full md:-mt-15">
-                            <div className="space-y-1">
+                        {/*RIGHT FORM SECTION*/}
+                        <div className="dark:bg-black/20 backdrop-blur-lg p-8 md:p-12 rounded-lg shadow-2xl md:w-[650px] w-full">
+
+                            <h2 className="text-3xl font-bold text-white/70">Create an account</h2>
+                            <p className="pb-5 text-white/70">
+                                Please sign up to continue.
+                            </p>
+
+                            <form onSubmit={handleSubmit(handleRegistration)} className="space-y-2">
+
+                                {/* NAME */}
                                 <div>
-                                    <h2 className="text-3xl font-bold text-white/70">Create an account</h2>
-                                    <p className="pb-5 text-white/70">
-                                        Please sign up to continue.
-                                    </p>
+                                    <label className="block text-sm font-medium text-white/70">
+                                        Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        {...register('name', { required: true })}
+                                        placeholder="Enter your name"
+                                        className="block w-full px-4 py-3 bg-white/70 border rounded-md text-black" />
+                                    {errors.name?.type === 'required' &&
+                                        <p className="text-white">Name is required</p>
+                                    }
                                 </div>
 
-                                <form onSubmit={handleSubmit(handleRegistration)} className="space-y-2">
-                                    {/*name*/}
-                                    <div>
-                                        <label
-                                            htmlFor="text"
-                                            className="block text-sm font-medium text-white/70">
-                                            Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            {...register('name', { required: true })}
-                                            id="name"
-                                            placeholder="Enter your name"
-                                            className="block w-full mt-1 px-4 py-3 bg-white/70 border border-neutral-300 rounded-md shadow-sm placeholder-black/60 focus:outline-none sm:text-sm text-black" />
-                                        {errors.name?.type === 'required' && <p className="text-white">
-                                            Name is require
-                                        </p>}
-                                    </div>
-                                    {/* email */}
-                                    <div>
-                                        <label
-                                            htmlFor="Email"
-                                            className="block text-sm font-medium text-white/70">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            {...register('email', { required: true })}
-                                            id="email"
-                                            placeholder="Enter your email"
-                                            className="block w-full mt-1 px-4 py-3 bg-white/70 border border-neutral-300 rounded-md shadow-sm placeholder-black/60 focus:outline-none sm:text-sm text-black" />
-                                        {errors.email?.type === 'required' && <p className="text-white">
-                                            Email is required
-                                        </p>}
-                                    </div>
-                                    {/* photo upload */}
-                                    <div>
-                                        <label
-                                            htmlFor="photo"
-                                            className="block text-sm font-medium text-white/70">
-                                            Photo upload
-                                        </label>
-                                        <input
-                                            type="file"
-                                            {...register('photo', { required: true })}
-                                            id="photo"
-                                            placeholder="Upload your photo"
-                                            className="block w-full mt-1 px-4 py-3 bg-white/70 border border-neutral-300 rounded-md shadow-sm placeholder-black/60 focus:outline-none sm:text-sm text-black" />
-                                        {errors.photo?.type === 'required' && <p className="text-white">
-                                            Photo upload is required
-                                        </p>}
-                                    </div>
+                                {/* EMAIL */}
+                                <div>
+                                    <label className="block text-sm font-medium text-white/70">
+                                        Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        {...register('email', { required: true })}
+                                        placeholder="Enter your email"
+                                        className="block w-full px-4 py-3 bg-white/70 border rounded-md text-black" />
+                                    {errors.email?.type === 'required' &&
+                                        <p className="text-white">Email is required</p>
+                                    }
+                                </div>
 
-                                    {/* Password */}
-                                    <div className="pb-4">
-                                        <label
-                                            htmlFor="password"
-                                            className="block text-sm font-medium text-white/70">
-                                            Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            {...register('password',
-                                                {
-                                                    required: true,
-                                                    minLength: 6,
-                                                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).{8,}$/
+                                {/* PHOTO UPLOAD */}
+                                <div>
+                                    <label className="block text-sm font-medium text-white/70">
+                                        Photo upload
+                                    </label>
+                                    <input
+                                        type="file"
+                                        {...register('photo', { required: true })}
+                                        className="block file-input w-full bg-white/70 border rounded-md text-black" />
+                                    {errors.photo?.type === 'required' &&
+                                        <p className="text-white">Photo is required</p>
+                                    }
+                                </div>
 
-                                                },
-                                            )}
-                                            id="password"
-                                            placeholder="Enter your password"
-                                            className="block w-full mt-1 px-4 py-3 bg-white/70 border border-neutral-300 rounded-md shadow-sm placeholder-black/60 focus:outline-none sm:text-sm text-black" />
-                                        {errors.password?.type === 'required' && <p className="text-white">
-                                            Password is required
-                                        </p>}
-                                        {errors.password?.type === 'minLength' && <p className="text-white">
-                                            Password must be 6 characters or longer
-                                        </p>}
-                                        {errors.password?.type === 'pattern' && <p className="text-white">
-                                            Password must be at least 8 characters, include uppercase, lowercase, number and special character.
-                                        </p>}
-                                    </div>
+                                {/* PASSWORD */}
+                                <div>
+                                    <label className="block text-sm font-medium text-white/70">
+                                        Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        {...register('password', {
+                                            required: true,
+                                            minLength: 6,
+                                            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-={};':"\\|,.<>/?]).{8,}$/
+                                        })}
+                                        placeholder="Enter your password"
+                                        className="block w-full px-4 py-3 bg-white/70 border rounded-md text-black" />
 
-                                    {/* Submit Button */}
-                                    <button onClick={handleRegistration}
-                                        type="submit"
-                                        className="w-full mb-0 btn text-white/70 btn-outline border-white/30 hover:text-black">
-                                        Create an account
-                                    </button>
-                                    <div className="flex items-center gap-4 my-4">
-                                        <div className="flex-1 border-t border-white/40"></div>
-                                        <span className="text-white/70">or</span>
-                                        <div className="flex-1 border-t border-white/40"></div>
-                                    </div>
-                                    <button onClick={handleGoogleRegistration} className="w-full mb-0 btn text-white/70 btn-outline border-white/30 hover:text-black">
-                                        Continue with Google <FaGoogle></FaGoogle>
-                                    </button>
-                                </form>
-                            </div>
+                                    {errors.password?.type === 'required' &&
+                                        <p className="text-white">Password is required</p>
+                                    }
+                                    {errors.password?.type === 'minLength' &&
+                                        <p className="text-white">Password must be 6 characters or longer</p>
+                                    }
+                                    {errors.password?.type === 'pattern' &&
+                                        <p className="text-white">
+                                            Password must include uppercase, lowercase, number & special character.
+                                        </p>
+                                    }
+                                </div>
+
+                                {/* SUBMIT BUTTON */}
+                                <button
+                                    type="submit"
+                                    className="w-full btn mt-2 hover:text-black text-white/70 btn-outline border-white/30">
+                                    Create an account
+                                </button>
+
+                                {/* DIVIDER */}
+                                <div className="flex items-center gap-4">
+                                    <div className="flex-1 border-t border-white/40"></div>
+                                    <span className="text-white/70">or</span>
+                                    <div className="flex-1 border-t border-white/40"></div>
+                                </div>
+
+                                {/* GOOGLE BUTTON */}
+                                <button
+                                    onClick={handleGoogleRegistration}
+                                    className="w-full btn hover:text-black text-white/70 btn-outline border-white/30">
+                                    Continue with Google <FaGoogle />
+                                </button>
+                            </form>
                         </div>
+
                     </div>
                 </div>
             </div>

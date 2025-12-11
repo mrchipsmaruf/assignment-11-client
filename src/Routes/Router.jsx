@@ -8,6 +8,8 @@ import Contact from "../Pages/Contact/Contact";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Pages/AuthPages/Login/Login";
 import Register from "../Pages/AuthPages/Register/Register";
+import PrivateRoute from "./PrivateRoute";
+import IssueDetails from "../Pages/AllIssuesPage/IssueDetails";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +22,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "all-issues",
-        Component: AllIssues,
+        Component: AllIssues
+      },
+      {
+        path: "issues-details/:id",
+        element: <PrivateRoute>
+        <IssueDetails></IssueDetails>
+        </PrivateRoute>
       },
       {
         path: "about",
