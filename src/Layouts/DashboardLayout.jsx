@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import UseAuth from '../Hooks/UseAuth';
 import Logo from '../Components/Logo/Logo';
 import Loading from '../Components/Loading/Loading';
+
+import {
+    Home,
+    FilePlus,
+    ListTodo,
+    User,
+    LogOut,
+} from "lucide-react";
 
 const DashboardLayout = () => {
     const { signOutUser } = UseAuth();
@@ -26,7 +34,7 @@ const DashboardLayout = () => {
 
                 {/* Navbar */}
                 <nav className="navbar w-full">
-                    <div className="px-4 font-semibold">Citizen Dashboard</div>
+                    <div className="px-4 text-2xl font-semibold">Citizen Dashboard</div>
                 </nav>
 
                 {/* Main page content */}
@@ -40,39 +48,39 @@ const DashboardLayout = () => {
             <div className="drawer-side p-3 ">
                 <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
 
-                <ul className="menu p-4 w-44 rounded-[7px] bg-white min-h-full">
+                <ul className="menu text-xl p-4 w-65 rounded-[7px] bg-white min-h-full">
 
                     {/* Website Logo + Name */}
-                    <div className="flex items-center gap-3 mb-6">
-                        <Logo />
-                    </div>
+                    <Link to="/" className="flex justify-start pl-4 logoText text-3xl mb-6">
+                            NOVAPRESS
+                    </Link>
 
                     <li>
                         <NavLink to="/">
-                            Homepage
+                            <Home size={18} /> Homepage
                         </NavLink>
                     </li>
                     <li>
                         <NavLink to="/dashboard/add-issue">
-                            Submit Issue
+                            <FilePlus size={18} /> Submit Issue
                         </NavLink>
                     </li>
 
                     <li>
                         <NavLink to="/dashboard/my-issues">
-                            My Issues
+                            <ListTodo size={18} /> My Issues
                         </NavLink>
                     </li>
 
                     <li>
                         <NavLink to="/dashboard/profile">
-                            Profile
+                            <User size={18} /> Profile
                         </NavLink>
                     </li>
 
                     <li>
                         <button onClick={signOutUser} className="text-red-600">
-                            Logout
+                            <LogOut size={18} /> Logout
                         </button>
                     </li>
                 </ul>

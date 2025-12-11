@@ -9,60 +9,52 @@ import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Pages/AuthPages/Login/Login";
 import Register from "../Pages/AuthPages/Register/Register";
 import PrivateRoute from "./PrivateRoute";
-import IssueDetails from "../Pages/AllIssuesPage/IssueDetails";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import MyIssues from "../Pages/Dashboard/MyIssues/MyIssues";
 import SubmitIssue from "../Pages/Dashboard/SubmitIssue/SubmitIssue";
+import IssueDetails from "../Pages/Dashboard/IssueDetails/IssueDetails";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: RootLayout,
+    element: <RootLayout />,
     children: [
       {
         index: true,
-        Component: Home,
+        element: <Home />,
       },
       {
         path: "all-issues",
-        Component: AllIssues
-      },
-      {
-        path: "issues-details/:id",
-        element: (
-          <PrivateRoute>
-            <IssueDetails />
-          </PrivateRoute>
-        )
+        element: <AllIssues />,
       },
       {
         path: "about",
-        Component: About,
+        element: <About />,
       },
       {
         path: "contact",
-        Component: Contact,
+        element: <Contact />,
       },
       {
         path: "*",
-        Component: NotFound,
+        element: <NotFound />,
       },
     ],
   },
 
   {
     path: "/",
-    Component: AuthLayout,
+    element: <AuthLayout />,
     children: [
       {
         path: "login",
-        Component: Login
+        element: <Login />,
       },
       {
         path: "register",
-        Component: Register
-      }
-    ]
+        element: <Register />,
+      },
+    ],
   },
 
   {
@@ -74,13 +66,21 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'add-issue',
-        element: <SubmitIssue />
+        path: "add-issue",
+        element: <SubmitIssue />,
       },
       {
-        path: 'my-issues',
-        element: <MyIssues />
-      }
-    ]
-  }
+        path: "my-issues",
+        element: <MyIssues />,
+      },
+      {
+        path: "issue/:id",
+        element: (
+          <PrivateRoute>
+            <IssueDetails />
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
 ]);
