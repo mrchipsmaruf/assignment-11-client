@@ -16,7 +16,9 @@ const ManageUsers = () => {
 
     // Promote to STAFF
     const makeStaff = async (email) => {
-        const res = await axiosSecure.patch(`/users/${email}`, { role: "staff" });
+        const res = await axiosSecure.patch(`/users/role/${email}`, {
+            role: "staff",
+        });
 
         if (res.data.modifiedCount > 0) {
             Swal.fire("Success", "User promoted to staff!", "success");

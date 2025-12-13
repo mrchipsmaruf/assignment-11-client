@@ -36,7 +36,7 @@ export default function AdminStatistics() {
     const { data: stats, isLoading } = useQuery({
         queryKey: ["adminStats"],
         queryFn: async () => {
-            const res = await axiosSecure.get("/dashboard/admin/stats");
+            const res = await axiosSecure.get("/dashboard/admin");
             return res.data;
         }
     });

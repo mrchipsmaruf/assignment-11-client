@@ -1,21 +1,22 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import useStaff from "../Hooks/useStaff";
+import { Navigate, useLocation } from "react-router-dom";
 import UseAuth from "../Hooks/UseAuth";
+import useRole from "../Hooks/useRole";
+import Loading from "../Components/Loading/Loading";
 
 const StaffRoute = ({ children }) => {
-    const { loading: authLoading } = UseAuth();
-    const [isStaff, staffLoading] = useStaff();
+    const { user, loading } = UseAuth();
+    const [role, roleLoading] = useRole();
+    const location = useLocation();
 
-    if (authLoading || staffLoading) {
-        return <div className="text-center p-6 text-xl">Checking staff access...</div>;
+    if (loading || roleLoading) {
+        return <Loading />;
     }
 
-    if (!isStaff) {
-        return <Navigate to="/" replace />;
+    if (user && role === "staff") {
+        return children;
     }
 
-    return children;
+    return <Navigate to="/" state={{ from: location }} replace />;
 };
 
 export default StaffRoute;

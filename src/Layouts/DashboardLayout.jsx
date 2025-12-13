@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import UseAuth from "../Hooks/UseAuth";
 import Loading from "../Components/Loading/Loading";
@@ -17,16 +17,9 @@ import {
 
 const DashboardLayout = () => {
     const { signOutUser } = UseAuth();
-    const [role, roleLoading] = useRole();
-    const [loading, setLoading] = useState(true);
+    const { role, roleLoading } = useRole();
 
-    // fake loading animation (you already had this)
-    useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 1200);
-        return () => clearTimeout(timer);
-    }, []);
-
-    if (loading || roleLoading) {
+    if (roleLoading) {
         return <Loading />;
     }
 
@@ -143,7 +136,7 @@ const DashboardLayout = () => {
                     {/* ROLE-BASED MENUS */}
                     {role === "admin" && adminMenu}
                     {role === "staff" && staffMenu}
-                    {role === "user" && userMenu}
+                    {role === "citizen" && userMenu}
 
                     {/* Statistics (optional) */}
                     <li>

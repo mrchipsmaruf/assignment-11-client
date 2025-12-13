@@ -26,6 +26,8 @@ import AdminRevenue from "../Pages/Dashboard/AdminDashboard/AdminRevenue";
 import StaffAssignedIssues from "../Pages/Dashboard/StaffDashboard/StaffAssignedIssues";
 import StaffDashboard from "../Pages/Dashboard/StaffDashboard/StaffDashboard";
 import CitizenDashboard from "../Pages/Dashboard/CitizenDashboard/CitizenDashboard";
+import UserProfile from "../Pages/Dashboard/UserProfile/UserProfile";
+import PaymentPage from "../Pages/Payment/PaymentPage";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +46,11 @@ export const router = createBrowserRouter([
       {
         path: "contact",
         element: <Contact />
+      },
+
+      {
+        path: "payment",
+        element: <PaymentPage></PaymentPage>
       },
 
       {
@@ -78,6 +85,13 @@ export const router = createBrowserRouter([
       {
         path: "add-issue",
         element: <SubmitIssue />
+      },
+
+      {
+        path: "profile",
+        element: <PrivateRoute>
+          <UserProfile></UserProfile>
+        </PrivateRoute>
       },
 
       {

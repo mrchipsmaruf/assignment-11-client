@@ -1,5 +1,5 @@
 import React from "react";
-import formBgVideo from "../../../assets/formVideo.mp4"
+import formBgVideo from "../../../assets/formVideo.mp4";
 import { Link, useLocation, useNavigate } from "react-router";
 import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
@@ -7,24 +7,26 @@ import UseAuth from "../../../Hooks/UseAuth";
 import axios from "axios";
 
 const Login = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { googleSignIn, signInUser } = UseAuth();
 
-    let { register, handleSubmit, formState: { errors } } = useForm();
-    let { googleSignIn, signInUser } = UseAuth();
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    let location = useLocation();
-    let navigate = useNavigate();
+    // Helper: Check if backend returned an empty object
+    const isEmptyUser = (obj) => !obj || Object.keys(obj).length === 0;
 
     // GOOGLE LOGIN HANDLER
-    let handleGoogleSignIn = () => {
+    const handleGoogleSignIn = () => {
         googleSignIn()
             .then(async (result) => {
 
-                let user = result.user;
+                const user = result.user;
+
                 let res = await axios.get(`http://localhost:3000/users/${user.email}`);
 
-                if (!res.data) {
-                    //create user in DB
-                    let newUser = {
+                if (isEmptyUser(res.data)) {
+                    const newUser = {
                         name: user.displayName,
                         email: user.email,
                         photo: user.photoURL,
@@ -42,29 +44,39 @@ const Login = () => {
     };
 
     // EMAIL + PASSWORD LOGIN HANDLER
-    let handleLogin = async (data) => {
+    const handleLogin = async (data) => {
         try {
-            let result = await signInUser(data.email, data.password);
-            let email = result.user.email;
+            const result = await signInUser(data.email, data.password);
+            const email = result.user.email;
 
             let res = await axios.get(`http://localhost:3000/users/${email}`);
 
-            if (!res.data) {
-                alert("User does not exist");
-                return;
+            // Auto-create user in DB if missing
+            if (isEmptyUser(res.data)) {
+                const newUser = {
+                    name: result.user.displayName || "No Name",
+                    email,
+                    photo: result.user.photoURL,
+                    role: "citizen",
+                    isBlocked: false,
+                    premium: false
+                };
+                await axios.post("http://localhost:3000/users", newUser);
+                res = { data: newUser };
             }
 
-            // BLOCKED USER CHECK
+            // BLOCKED USER
             if (res.data.isBlocked) {
                 alert("Your account is blocked. Contact support.");
                 return;
             }
 
-            // ROLE BASED NAVIGATION
+            // ROLE-BASED NAVIGATION
             if (res.data.role === "admin") {
-                navigate("/dashboard/admin");
-            }
-            else {
+                navigate("/dashboard/admin-dashboard");
+            } else if (res.data.role === "staff") {
+                navigate("/dashboard/staff-dashboard");
+            } else {
                 navigate(location?.state || "/");
             }
 
@@ -83,7 +95,8 @@ const Login = () => {
                 loop
                 muted
                 playsInline
-                className="fixed top-0 left-0 w-full h-full object-cover z-0" />
+                className="fixed top-0 left-0 w-full h-full object-cover z-0"
+            />
             <div className="fixed inset-0 bg-black/40 z-0" />
 
             <div className="relative z-10 py-25">
@@ -108,7 +121,7 @@ const Login = () => {
 
                             <p className="flex items-center gap-5">
                                 New to Novapress?
-                                <Link state={location.state} to={"/register"} className="btn btn-outline">
+                                <Link state={location.state} to="/register" className="btn btn-outline">
                                     Create an account
                                 </Link>
                             </p>
@@ -129,9 +142,10 @@ const Login = () => {
                                         <label className="block text-sm font-medium text-white/70">Email</label>
                                         <input
                                             type="email"
-                                            {...register('email', { required: true })}
+                                            {...register("email", { required: true })}
                                             placeholder="Enter your email"
-                                            className="block w-full mt-1 px-4 py-3 bg-white/70 border rounded-md text-black" />
+                                            className="block w-full mt-1 px-4 py-3 bg-white/70 border rounded-md text-black"
+                                        />
                                         {errors.email && <p className="text-white">Email is required</p>}
                                     </div>
 
@@ -140,14 +154,18 @@ const Login = () => {
                                         <label className="block text-sm font-medium text-white/70">Password</label>
                                         <input
                                             type="password"
-                                            {...register('password', { required: true })}
+                                            {...register("password", { required: true })}
                                             placeholder="Enter your password"
-                                            className="block w-full mt-1 px-4 py-3 bg-white/70 border rounded-md text-black" />
+                                            className="block w-full mt-1 px-4 py-3 bg-white/70 border rounded-md text-black"
+                                        />
                                         {errors.password && <p className="text-white">Password is required</p>}
                                     </div>
 
-                                    {/* Submit Button */}
-                                    <button type="submit" className="w-full hover:text-black btn text-white/70 btn-outline">
+                                    {/* Login Button */}
+                                    <button
+                                        type="submit"
+                                        className="w-full hover:text-black btn text-white/70 btn-outline"
+                                    >
                                         Login
                                     </button>
 
@@ -161,12 +179,12 @@ const Login = () => {
                                     <button
                                         type="button"
                                         onClick={handleGoogleSignIn}
-                                        className="w-full btn hover:text-black text-white/70 btn-outline">
+                                        className="w-full btn hover:text-black text-white/70 btn-outline"
+                                    >
                                         Continue with Google <FaGoogle />
                                     </button>
 
                                 </form>
-
                             </div>
                         </div>
 

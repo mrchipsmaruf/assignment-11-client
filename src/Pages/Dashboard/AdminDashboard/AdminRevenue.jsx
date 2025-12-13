@@ -10,7 +10,7 @@ const AdminRevenue = () => {
     const { data, isLoading } = useQuery({
         queryKey: ["adminRevenue"],
         queryFn: async () => {
-            const res = await axiosSecure.get("/payments/admin/revenue");
+            const res = await axiosSecure.get("/payment/admin/revenue");
             return res.data;
         }
     });

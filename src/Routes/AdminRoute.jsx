@@ -1,32 +1,22 @@
-import { Navigate } from "react-router";
+import { Navigate, useLocation } from "react-router-dom";
 import UseAuth from "../Hooks/UseAuth";
-import { useEffect, useState } from "react";
-import axiosSecure from "../Services/axiosSecure";
+import useRole from "../Hooks/useRole";
+import Loading from "../Components/Loading/Loading";
 
 const AdminRoute = ({ children }) => {
     const { user, loading } = UseAuth();
-    const [isAdmin, setIsAdmin] = useState(null);
+    const [role, roleLoading] = useRole();
+    const location = useLocation();
 
-    useEffect(() => {
-        if (!user?.email) return;
-
-        axiosSecure.get(`/users/${user.email}`)
-            .then(res => {
-                setIsAdmin(res.data?.role === "admin");
-            })
-            .catch(() => {
-                setIsAdmin(false);
-            });
-
-    }, [user]);
-
-    if (loading || isAdmin === null) {
-        return <div className="text-center text-xl">Checking permissions...</div>;
+    if (loading || roleLoading) {
+        return <Loading />;
     }
 
-    if (!isAdmin) return <Navigate to="/" />;
+    if (user && role === "admin") {
+        return children;
+    }
 
-    return children;
+    return <Navigate to="/" state={{ from: location }} replace />;
 };
 
 export default AdminRoute;

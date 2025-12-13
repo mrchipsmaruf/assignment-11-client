@@ -8,25 +8,22 @@ export default function AdminAssignStaff() {
     const axiosSecure = useAxiosSecure();
     const qc = useQueryClient();
 
-    // Fetch all issues (admin sees everything)
-    const { data: rawIssues = [], isLoading: issuesLoading, refetch: refetchIssues } = useQuery({
+    // Fetch issues (admin sees everything)
+    const { data: issues = [], isLoading: issuesLoading, refetch } = useQuery({
         queryKey: ["admin:issues"],
         queryFn: async () => {
             const res = await axiosSecure.get("/issues");
-            // backend might return { items } or array
-            if (res.data && res.data.items) return res.data.items;
-            return res.data || [];
-        },
+            return res.data?.items || res.data || [];
+        }
     });
 
     // Fetch staff list
     const { data: staffList = [], isLoading: staffLoading } = useQuery({
         queryKey: ["admin:staff"],
         queryFn: async () => {
-            const r = await axiosSecure.get("/staff");
-            return r.data || [];
-        },
-        enabled: true,
+            const res = await axiosSecure.get("/staff");
+            return res.data || [];
+        }
     });
 
     // Assign mutation
@@ -36,7 +33,6 @@ export default function AdminAssignStaff() {
         },
         onSuccess: () => {
             qc.invalidateQueries(["admin:issues"]);
-            qc.invalidateQueries(["admin:staff"]);
             Swal.fire("Assigned", "Staff successfully assigned to the issue.", "success");
         },
         onError: (err) => {
@@ -46,18 +42,17 @@ export default function AdminAssignStaff() {
 
     if (issuesLoading || staffLoading) return <Loading />;
 
-    // show only unassigned issues by default
-    const unassigned = rawIssues.filter((i) => !i.assignedStaff);
+    // Extract only unassigned issues
+    const unassigned = issues.filter((i) => !i.assignedStaff);
 
+    // Assign handler
     const handleAssign = async (issueId) => {
-        // if no staff available
         if (!staffList.length) {
-            return Swal.fire("No staff", "There are no staff users to assign.", "info");
+            return Swal.fire("No Staff", "There are no staff users to assign.", "info");
         }
 
-        // Build input options for Swal
-        const inputOptions = staffList.reduce((acc, s) => {
-            acc[s.email] = s.name ? `${s.name} (${s.email})` : s.email;
+        const inputOptions = staffList.reduce((acc, user) => {
+            acc[user.email] = `${user.name || "Unnamed"} (${user.email})`;
             return acc;
         }, {});
 
@@ -69,38 +64,31 @@ export default function AdminAssignStaff() {
             showCancelButton: true,
         });
 
-        if (!staffEmail) return; // cancelled
+        if (!staffEmail) return;
 
-        // Optional confirmation
         const confirm = await Swal.fire({
             title: "Confirm assignment",
-            html: `Assign <b>${staffEmail}</b> to selected issue?`,
+            html: `Assign <b>${staffEmail}</b> to this issue?`,
             icon: "question",
             showCancelButton: true,
         });
 
         if (!confirm.isConfirmed) return;
 
-        // perform assignment
         assignMutation.mutate({ issueId, staffEmail });
-    };
-
-    const handleShowAllToggle = async () => {
-        // just refetch if needed
-        await refetchIssues();
     };
 
     return (
         <div className="p-6">
             <h1 className="text-2xl font-semibold mb-4">Assign Staff to Issues</h1>
 
-            <div className="mb-4 flex items-center justify-between gap-4">
+            <div className="mb-4 flex items-center justify-between">
                 <p className="text-sm text-gray-600">
-                    Unassigned issues are shown below. Use <b>Assign</b> to pick a staff member.
+                    Only <b>unassigned</b> issues are shown below.
                 </p>
-                <div className="flex gap-2">
-                    <button className="btn btn-sm" onClick={handleShowAllToggle}>Refresh</button>
-                </div>
+                <button className="btn btn-sm" onClick={() => refetch()}>
+                    Refresh
+                </button>
             </div>
 
             <div className="overflow-x-auto bg-white rounded shadow p-4">
@@ -120,8 +108,8 @@ export default function AdminAssignStaff() {
                     <tbody>
                         {unassigned.length === 0 && (
                             <tr>
-                                <td colSpan={7} className="text-center text-gray-500 py-6">
-                                    No unassigned issues. (Try refreshing)
+                                <td colSpan="7" className="text-center text-gray-500 py-6">
+                                    All issues are assigned. (Try refreshing)
                                 </td>
                             </tr>
                         )}
@@ -131,26 +119,45 @@ export default function AdminAssignStaff() {
                                 <td className="font-semibold">{issue.title}</td>
                                 <td>{issue.reporterEmail}</td>
                                 <td>{issue.category || "-"}</td>
+
+                                {/* Status */} 
                                 <td>
-                                    <span className={`px-2 py-1 rounded text-xs text-white ${issue.status === "pending" ? "bg-yellow-500"
-                                            : issue.status === "in-progress" ? "bg-blue-500"
-                                                : issue.status === "resolved" ? "bg-green-600"
-                                                    : "bg-gray-500"
-                                        }`}>{issue.status}</span>
+                                    <span
+                                        className={`px-2 py-1 rounded text-xs text-white ${
+                                            issue.status === "pending"
+                                                ? "bg-yellow-500"
+                                                : issue.status === "in-progress"
+                                                ? "bg-blue-500"
+                                                : issue.status === "resolved"
+                                                ? "bg-green-600"
+                                                : "bg-gray-500"
+                                        }`}
+                                    >
+                                        {issue.status}
+                                    </span>
                                 </td>
+
+                                {/* Priority */}
                                 <td>
-                                    <span className={`px-2 py-1 rounded text-xs text-white ${issue.priority === "high" ? "bg-red-600" : "bg-gray-600"}`}>
+                                    <span
+                                        className={`px-2 py-1 rounded text-xs text-white ${
+                                            issue.priority === "high" ? "bg-red-600" : "bg-gray-600"
+                                        }`}
+                                    >
                                         {issue.priority || "normal"}
                                     </span>
                                 </td>
+
                                 <td>{issue.assignedStaff || "Unassigned"}</td>
+
                                 <td className="flex gap-2">
                                     <button
                                         className="btn btn-sm btn-warning"
-                                        onClick={() => handleAssign(issue._id, issue.assignedStaff)}
+                                        onClick={() => handleAssign(issue._id)}
                                     >
                                         Assign
                                     </button>
+
                                     <button
                                         className="btn btn-sm"
                                         onClick={() => window.open(`/dashboard/issue/${issue._id}`, "_blank")}
@@ -159,6 +166,7 @@ export default function AdminAssignStaff() {
                                         View
                                     </button>
                                 </td>
+
                             </tr>
                         ))}
                     </tbody>
